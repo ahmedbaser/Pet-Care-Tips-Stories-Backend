@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import Comment, { IComment } from '../models/Comment';
 import { AuthenticatedRequest } from '../types/types';
 import Post from '../models/Post';
+import { moderateComment } from '../utils/moderateComment';
 
 
 
@@ -15,6 +16,16 @@ export const createComment = async (req: Request, res: Response) => {
    // Ensure the user is authenticated
     if (!req.user) {
       return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+
+    // AI Moderation
+    const moderationResult = await moderateComment(comment);
+    if(moderationResult.flagged) {
+      return res.status(400).json({
+        success: false,
+        message: 'Comment rejected due to content moderation',
+        reason: moderationResult.reason,
+      });
     }
 
     // Find the post by ID
@@ -98,8 +109,21 @@ export const updateComment = async (req: AuthenticatedRequest, res: Response): P
             return res.status(403).json({ success: false, message: "Unauthorized" });
         }
 
+        
+        
         comment.content = req.body.content || comment.content;
-
+        // AI Moderation
+      // const {content} =  req.body;
+        const moderationResultTwo = await moderateComment(comment.content)
+        if(moderationResultTwo.flagged) {
+          return res.status(400).json({
+            success: false,
+            message: "Comment update reject due to content moderation",
+            reason: moderationResultTwo.reason,
+          })
+        }
+        
+        
         await comment.save();
         return res.status(200).json({ success: true, message: "Comment updated", data: comment });
         }catch (error: any) {
@@ -135,6 +159,17 @@ export const replyToComment = async (req: Request, res: Response) => {
   const { reply } = req.body;
 
   try {
+
+    // AI Moderation
+    const moderationResultThree = await moderateComment(reply)
+     if(moderationResultThree.flagged) {
+      return res.status(400).json({
+        success: false,
+        message: 'Comment rejected due to content moderation',
+        reason: moderationResultThree.reason,
+      })
+     }
+
     // Fetch the original comment to get authorId and postId
     const originalComment = await Comment.findById(commentId);
 

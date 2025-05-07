@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Post from '../models/Post';
+import { moderateContent } from '../utils/moderateContent';
 
 // Create a Post
 export const createPost = async (req: Request, res: Response) => {
@@ -9,7 +10,12 @@ export const createPost = async (req: Request, res: Response) => {
             return res.status(401).json({ message: 'Unauthorized' });
         }
         
-
+        // AI Moderation Check
+        // const isFlagged = await moderateContent(content);
+        // if(isFlagged) {
+        //     return res.status(400).json({message: 'Content violates community guidelines. Please revise and try again.'})
+        // }
+        const moderationResult = await moderateContent(content)
         const post = new Post({
             title,
             content,
@@ -18,6 +24,8 @@ export const createPost = async (req: Request, res: Response) => {
             isPublished,
             author: req.user._id,  
             imageUrl,
+            isFlagged: moderationResult,
+            moderationReason: moderationResult.reason,
         });
         await post.save();
         res.status(201).json(post);
@@ -39,6 +47,12 @@ export const updatePost = async (req: Request, res: Response) => {
         }
         if(post.author.toString() !== req.user._id.toString()) {
             return res.status(403).json({message: 'Forbidden: You can only update your own posts'});
+        }
+
+        // AI Moderation Check
+        const isFlagged = await moderateContent(content);
+        if(isFlagged) {
+            return res.status(400).json({message: 'Updated content violates community guidelines.'})
         }
 
         const updatePost = await Post.findByIdAndUpdate(req.params.id, 

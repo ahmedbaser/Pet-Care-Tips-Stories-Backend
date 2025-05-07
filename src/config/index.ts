@@ -13,5 +13,5 @@ export default {
     cohere_api_key: process.env.COHERE_API_KEY,
     generate_stroy_key: process.env.GENERATE_PET_KEY,
     
-    
 }
+

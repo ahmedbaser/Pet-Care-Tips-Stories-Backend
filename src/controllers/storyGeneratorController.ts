@@ -13,7 +13,7 @@ export const generatePetStory = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Pet type and pet name are required' });
     }
     console.log('Pet Type:', petType);
-    console.log('Pet Name:', petName);
+    console.log('Pet Name:', petName); 
     console.log("Using API Key:", config.generate_stroy_key);
 
 
@@ -44,3 +44,5 @@ export const generatePetStory = async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Failed to generate story' });
   }
 };
+
+
