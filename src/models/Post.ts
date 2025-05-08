@@ -33,7 +33,7 @@ const PostSchema: Schema<IPost> = new Schema({
     isPublished: { type: Boolean, default: false },  
     previewContent: { type: String, required: false },
     isFlagged: {type: Boolean, default: false},
-    moderationReason: {type: String},  
+    moderationReason: {type: String, default: null},  
     imageUrl: {type: String}
 }, { timestamps: true });
 

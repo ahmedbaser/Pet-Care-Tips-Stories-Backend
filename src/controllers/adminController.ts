@@ -129,6 +129,16 @@ export const getPaymentHistory = async (req: Request, res: Response) => {
 };
 
 
+export const getFlaggedPosts = async(req:Request, res:Response) => {
+  try {
+    const posts = await Post.find({isFlagged: true}).populate('author', 'name');
+    res.status(200).json(posts)
+  } catch(error) {
+    res.status(500).json({message: 'Failed to fetch posts', error})
+  }
+}
+
+
 
 
 

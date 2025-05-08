@@ -11,11 +11,13 @@ export const createPost = async (req: Request, res: Response) => {
         }
         
         // AI Moderation Check
-        // const isFlagged = await moderateContent(content);
-        // if(isFlagged) {
-        //     return res.status(400).json({message: 'Content violates community guidelines. Please revise and try again.'})
-        // }
-        const moderationResult = await moderateContent(content)
+    
+        const moderationResult = await moderateContent(content);
+        // console.log('this is moderation content Result:', moderationResult);
+        //  if (moderationResult.flagged) {
+        //    return res.status(400).json({ message: `Updated content violates guidelines: ${moderationResult.reason}` });
+        //  }
+
         const post = new Post({
             title,
             content,
@@ -24,8 +26,9 @@ export const createPost = async (req: Request, res: Response) => {
             isPublished,
             author: req.user._id,  
             imageUrl,
-            isFlagged: moderationResult,
-            moderationReason: moderationResult.reason,
+            isFlagged: moderationResult.flagged,
+            moderationReason: moderationResult.reason
+            
         });
         await post.save();
         res.status(201).json(post);
@@ -33,6 +36,9 @@ export const createPost = async (req: Request, res: Response) => {
         res.status(400).json({ message: 'Error creating post', error });
     }
 };
+
+
+
 
 export const updatePost = async (req: Request, res: Response) => {
     const {title, content, category, isPremium, isPublished, imageUrl} = req.body;
