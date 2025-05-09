@@ -11,12 +11,11 @@ export const createPost = async (req: Request, res: Response) => {
         }
         
         // AI Moderation Check
-    
-        const moderationResult = await moderateContent(content);
-        // console.log('this is moderation content Result:', moderationResult);
-        //  if (moderationResult.flagged) {
-        //    return res.status(400).json({ message: `Updated content violates guidelines: ${moderationResult.reason}` });
-        //  }
+       const moderationResult = await moderateContent(content);
+        console.log('this is moderation content Result:', moderationResult);
+         if (moderationResult.flagged) {
+           return res.status(400).json({ message: `Updated content violates guidelines: ${moderationResult.reason}` });
+         }
 
         const post = new Post({
             title,

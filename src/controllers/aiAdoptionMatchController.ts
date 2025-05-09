@@ -68,7 +68,7 @@ export const getPetAdoption = async (req: Request, res:Response) => {
          message: 'Pet adoption match generated successfully',
          data: newPetAdoptionMatch,
        })
-
+       
      } catch(error) {
        console.error('Pet Adoption Match Error:', error);
        return res.status(500).json({error: 'Failed to generate adoption match.'})

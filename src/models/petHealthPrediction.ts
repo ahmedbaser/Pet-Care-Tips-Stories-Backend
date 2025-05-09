@@ -1,6 +1,7 @@
-import { model, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 interface IPetHealthPrediction {
+    userId: mongoose.Types.ObjectId;
     petName: string;
     species: string;
     breed?: string;
@@ -22,6 +23,7 @@ interface IPetHealthPrediction {
 
 
 const petHealthPredictionSchema = new Schema<IPetHealthPrediction>({
+    userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     petName: {type: String, required: true},
     species: {type: String, required: true},
     breed: {type: String},

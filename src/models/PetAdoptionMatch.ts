@@ -5,7 +5,6 @@ export interface IPetAdoptionMatch extends Document {
     suggestion: string;
 }
 
-
 const PetAdoptionMatchSchema: Schema = new Schema({
     userId: {type: String, required: true},
     suggestion: {type: String, required: true},

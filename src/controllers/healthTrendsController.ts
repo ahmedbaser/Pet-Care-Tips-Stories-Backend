@@ -3,17 +3,22 @@ import OpenAI from "openai";
 import config from "../config";
 import { PetHealthPrediction } from "../models/petHealthPrediction";
 
+interface AuthenticateRequest extends Request {
+  userId?: string;
+}
 
-export const getPetHealthPrediction = async (req: Request, res: Response) => {
+
+export const getPetHealthPrediction = async (req: AuthenticateRequest, res: Response) => {
     try {
-       const {petName, species, breed, age, weight, gender, activityLevel, diet, vaccinationStatus, pastIllnesses,  currentSymptoms, lastVetVisit, medications, spayedNeutered, customInputs} = req.body;
+       const {userId,petName, species, breed, age, weight, gender, activityLevel, diet, vaccinationStatus, pastIllnesses,  currentSymptoms, lastVetVisit, medications, spayedNeutered, customInputs} = req.body;
        if(!petName || !species || !age || !weight) {
         return res.status(400).json({error: "Pet name, species, age, and weight are required."});
       }
       const openai = new OpenAI({
         apiKey: config.openai_api_key as string,
       });
-
+      
+      // custom input if user's want to take input by own as well 
       let customInfo = "";
       if(customInputs && typeof customInputs == "object") {
         customInfo = Object.entries(customInputs).map(([key, value]) => `-${key}: ${value}`).join('\n')
@@ -65,6 +70,7 @@ export const getPetHealthPrediction = async (req: Request, res: Response) => {
       const healthPrediction = completion.choices[0]?.message?.content || 'No prediction generated.';
       
       const newHealthPrediction = new PetHealthPrediction({
+        userId,
         petName,
         species,
         breed,
