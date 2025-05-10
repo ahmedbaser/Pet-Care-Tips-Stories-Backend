@@ -10,6 +10,7 @@ interface IBehaviorInsights extends Document {
     activityLevel?: string;
     insights: string;
     customInputs: Record<string, any>;
+    suggestion: string;
     createdAt?: Date;
 }
 
@@ -21,6 +22,7 @@ const behavioralInsightSchema = new mongoose.Schema({
     trainingHistory: {type: String},
     activityLevel: {type: String},
     insights: {type:String},
+    suggestion: {type: String},
     createdAt: { type: Date, default: Date.now}
 });
 

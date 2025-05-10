@@ -51,9 +51,7 @@ export const getHealthAlerts = async(req: AuthenticateRequest, res:Response) => 
             alertMessage,
             
           });
-         
           await newAlertMessage.save();
-
           return res.status(201).json({
             message: 'Pet health alerts generate successfully',
             suggestion: newAlertMessage.alertMessage

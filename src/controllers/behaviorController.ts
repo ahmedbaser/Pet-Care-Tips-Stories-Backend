@@ -57,7 +57,7 @@ export const getBehavioralInsights = async (req: AuthenticateRequest, res: Respo
         console.log('this is behavior Insights Data:', newInsight)
         return res.status(201).json({
          message: 'Behavioral insight generated and saved',
-         data: newInsight,
+         suggestion: newInsight,
         });
     
       } catch(error) {

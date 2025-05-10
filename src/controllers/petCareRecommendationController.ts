@@ -10,7 +10,7 @@ interface AuthenticateRequest extends Request {
 
 export const getPetCareRecommendation = async(req: AuthenticateRequest, res: Response) => {
     try {
-        const {userId,petType, petAge, petHealthConcerns, petDietPreferences, activityLevel, weight, location, customInputs} = req.body;
+        const {userId, petType, petAge, petHealthConcerns, petDietPreferences, activityLevel, weight, location, customInputs} = req.body;
           if(!petType || !petAge) {
             return res.status(400).json({error: "Pet type and pet age are required"});
           }
