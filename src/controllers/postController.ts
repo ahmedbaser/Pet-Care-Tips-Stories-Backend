@@ -11,24 +11,25 @@ export const createPost = async (req: Request, res: Response) => {
         }
         
         // AI Moderation Check
-       const moderationResult = await moderateContent(content);
+        const moderationResult = await moderateContent(content);
         console.log('this is moderation content Result:', moderationResult);
          if (moderationResult.flagged) {
-           return res.status(400).json({ message: `Updated content violates guidelines: ${moderationResult.reason}` });
+           return res.status(400).json({ message: `Updated content violates community guidelines: ${moderationResult.reason}` });
          }
-
+    
         const post = new Post({
             title,
             content,
             category,
             isPremium,
-            isPublished,
             author: req.user._id,  
             imageUrl,
+            isPublished,
             isFlagged: moderationResult.flagged,
             moderationReason: moderationResult.reason
             
         });
+
         await post.save();
         res.status(201).json(post);
     } catch (error) {

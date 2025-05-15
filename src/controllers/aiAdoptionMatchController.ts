@@ -59,7 +59,7 @@ export const getPetAdoption = async (req: Request, res:Response) => {
        const matchSuggestion = completion.choices[0]?.message?.content || 'No suggestion available.';
 
        const newPetAdoptionMatch = new PetAdoptionMatch({
-        //  userId: user.id,
+      // userId: user.id,
          userId: req.userId,
          suggestion: matchSuggestion,
        });

@@ -1,5 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes';
@@ -22,6 +21,7 @@ import BehavioralInsightsRouter from './routes/BehavioralInsightsRoutes';
 import PetActivityAnalyticsRouter from './routes/PetActivityAnalyticsRoutes';
 import AdoptionRouter from './routes/adoptionRoutes';
 import healthTrendsRouter from './routes/healthTrendsRoutes';
+import imageRecognitionRouter from './routes/imageRecognitionRoute';
 
 
 
@@ -66,6 +66,7 @@ app.use('/api', PetActivityAnalyticsRouter);
 app.use('/api', BehavioralInsightsRouter);
 app.use('/api', AdoptionRouter);
 app.use('/api', healthTrendsRouter);
+app.use('/api', imageRecognitionRouter);
 app.use('/api', premiumContentRoutes);
 app.use('/api', chatRouter)
 

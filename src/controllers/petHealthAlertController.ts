@@ -11,10 +11,16 @@ interface AuthenticateRequest extends Request {
 
 export const getHealthAlerts = async(req: AuthenticateRequest, res:Response) => {
     try {
-        const {userId, petType, petAge, symptoms, duration, recentBehavior, customInputs} = req.body;
-          if(!symptoms) {
+        
+        const userId = req.userId;
+        const {petType, petAge, symptoms, duration, recentBehavior, customInputs} = req.body;
+         
+        if(!symptoms) {
             return res.status(400).json({error: 'Symptoms are required'});
           }
+        if(!userId) {
+          return res.status(400).json({error: 'User is not authenticated'})
+        }  
           const openai = new OpenAI({apiKey: config.openai_api_key as string});
 
           let customInfo = ""

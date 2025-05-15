@@ -8,6 +8,7 @@ import { UploadApiOptions } from 'cloudinary';
 
 
 // Extend the Request interface to include 'file' and 'fileValidationError'
+
 interface MulterRequest extends Request {
     file?: Express.Multer.File;
     fileValidationError?: string;
@@ -32,6 +33,7 @@ const upload = multer({ storage: storage, fileFilter }).single('image');
 
 
 
+
 export const uploadImage = (req: MulterRequest, res: Response): void => {
     upload(req, res, function (err: any) {
         if (err instanceof MulterError) {
@@ -48,7 +50,7 @@ export const uploadImage = (req: MulterRequest, res: Response): void => {
             return res.status(400).json({ success: false, message: 'No file uploaded' });
         }
         
-     // Generate timestamp and signature
+        // Generate timestamp and signature
         const timestamp = Math.floor(Date.now()/1000);
         const public_id = `uploads/${req.file.originalname}`;
 

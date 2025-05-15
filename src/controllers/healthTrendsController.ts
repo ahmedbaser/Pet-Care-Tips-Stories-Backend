@@ -10,10 +10,16 @@ interface AuthenticateRequest extends Request {
 
 export const getPetHealthPrediction = async (req: AuthenticateRequest, res: Response) => {
     try {
-       const {userId,petName, species, breed, age, weight, gender, activityLevel, diet, vaccinationStatus, pastIllnesses,  currentSymptoms, lastVetVisit, medications, spayedNeutered, customInputs} = req.body;
+       const userId = req.userId
+       const {petName, species, breed, age, weight, gender, activityLevel, diet, vaccinationStatus, pastIllnesses,  currentSymptoms, lastVetVisit, medications, spayedNeutered, customInputs} = req.body;
        if(!petName || !species || !age || !weight) {
         return res.status(400).json({error: "Pet name, species, age, and weight are required."});
       }
+        if (!userId) {
+      return res.status(401).json({ success: false, message: 'User not authenticated' });
+   }
+
+
       const openai = new OpenAI({
         apiKey: config.openai_api_key as string,
       });

@@ -11,11 +11,15 @@ interface AuthenticateRequest extends Request {
 
 export const getBehavioralInsights = async (req: AuthenticateRequest, res: Response) => {
       try {
-        const {userId, petType, petAge, behaviorIssue, trainingHistory, activityLevel, customInputs} = req.body;
+        const userId = req.userId; 
+        const {petType, petAge, behaviorIssue, trainingHistory, activityLevel, customInputs} = req.body;
          
         if(!behaviorIssue || !petType || !petAge) {
             return res.status(400).json({error: 'petType, petAge, behaviorIssue are required'})
          }
+        if(!userId) {
+         return res.status(400).json({error: 'User is not authenticated'});
+        } 
        const openai = new OpenAI({apiKey: config.openai_api_key as string});
         
        let customInfo = ""
@@ -57,7 +61,7 @@ export const getBehavioralInsights = async (req: AuthenticateRequest, res: Respo
         console.log('this is behavior Insights Data:', newInsight)
         return res.status(201).json({
          message: 'Behavioral insight generated and saved',
-         suggestion: newInsight,
+         suggestion: newInsight.insights,
         });
     
       } catch(error) {
