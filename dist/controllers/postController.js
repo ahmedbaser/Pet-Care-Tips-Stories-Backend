@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePost = exports.downvotePost = exports.upvotePost = exports.getPostById = exports.getPostsByAuthorId = exports.getPosts = exports.updatePost = exports.createPost = void 0;
 const Post_1 = __importDefault(require("../models/Post"));
+const moderateContent_1 = require("../utils/moderateContent");
 // Create a Post
 const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, content, category, isPremium, isPublished, imageUrl } = req.body;
@@ -21,14 +22,22 @@ const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if (!req.user) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
+        // AI Moderation Check
+        const moderationResult = yield (0, moderateContent_1.moderateContent)(content);
+        console.log('this is moderation content Result:', moderationResult);
+        if (moderationResult.flagged) {
+            return res.status(400).json({ message: `Updated content violates community guidelines: ${moderationResult.reason}` });
+        }
         const post = new Post_1.default({
             title,
             content,
             category,
             isPremium,
-            isPublished,
             author: req.user._id,
             imageUrl,
+            isPublished,
+            isFlagged: moderationResult.flagged,
+            moderationReason: moderationResult.reason
         });
         yield post.save();
         res.status(201).json(post);
@@ -50,6 +59,11 @@ const updatePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
         if (post.author.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: 'Forbidden: You can only update your own posts' });
+        }
+        // AI Moderation Check
+        const isFlagged = yield (0, moderateContent_1.moderateContent)(content);
+        if (isFlagged) {
+            return res.status(400).json({ message: 'Updated content violates community guidelines.' });
         }
         const updatePost = yield Post_1.default.findByIdAndUpdate(req.params.id, { $set: { title, content, category, isPremium, isPublished, imageUrl } }, { new: true, runValidators: true });
         console.log("Received Update Request:", req.body);

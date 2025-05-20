@@ -13,4 +13,5 @@ router.get('/posts', authMiddleware_1.authenticate, authMiddleware_1.adminOnly, 
 router.put('/posts/:id/publish', authMiddleware_1.authenticate, authMiddleware_1.adminOnly, adminController_1.togglePostPublish);
 router.get('/payments', authMiddleware_1.authenticate, authMiddleware_1.adminOnly, adminController_1.getPaymentHistory);
 router.delete('/posts/:id', authMiddleware_1.authenticate, authMiddleware_1.adminOnly, adminController_1.deletePost);
+router.get('/flagged', authMiddleware_1.authenticate, adminController_1.getFlaggedPosts);
 exports.default = router;

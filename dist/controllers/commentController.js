@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.replyToComment = exports.deleteComment = exports.updateComment = exports.getAllComments = exports.getComments = exports.createComment = void 0;
 const Comment_1 = __importDefault(require("../models/Comment"));
 const Post_1 = __importDefault(require("../models/Post"));
+const moderateComment_1 = require("../utils/moderateComment");
 // Create Comment Controller 
 const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -23,6 +24,15 @@ const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         // Ensure the user is authenticated
         if (!req.user) {
             return res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+        // AI Moderation
+        const moderationResult = yield (0, moderateComment_1.moderateComment)(comment);
+        if (moderationResult.flagged) {
+            return res.status(400).json({
+                success: false,
+                message: 'Comment rejected due to content moderation',
+                reason: moderationResult.reason,
+            });
         }
         // Find the post by ID
         const post = yield Post_1.default.findById(postId);
@@ -97,6 +107,16 @@ const updateComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             return res.status(403).json({ success: false, message: "Unauthorized" });
         }
         comment.content = req.body.content || comment.content;
+        // AI Moderation
+        // const {content} =  req.body;
+        const moderationResultTwo = yield (0, moderateComment_1.moderateComment)(comment.content);
+        if (moderationResultTwo.flagged) {
+            return res.status(400).json({
+                success: false,
+                message: "Comment update reject due to content moderation",
+                reason: moderationResultTwo.reason,
+            });
+        }
         yield comment.save();
         return res.status(200).json({ success: true, message: "Comment updated", data: comment });
     }
@@ -129,6 +149,15 @@ const replyToComment = (req, res) => __awaiter(void 0, void 0, void 0, function*
     const { commentId } = req.params;
     const { reply } = req.body;
     try {
+        // AI Moderation
+        const moderationResultThree = yield (0, moderateComment_1.moderateComment)(reply);
+        if (moderationResultThree.flagged) {
+            return res.status(400).json({
+                success: false,
+                message: 'Comment rejected due to content moderation',
+                reason: moderationResultThree.reason,
+            });
+        }
         // Fetch the original comment to get authorId and postId
         const originalComment = yield Comment_1.default.findById(commentId);
         if (!originalComment) {

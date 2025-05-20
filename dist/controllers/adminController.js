@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPaymentHistory = exports.togglePostPublish = exports.deletePost = exports.deleteUser = exports.getAllPosts = exports.getAllUsers = void 0;
+exports.getFlaggedPosts = exports.getPaymentHistory = exports.togglePostPublish = exports.deletePost = exports.deleteUser = exports.getAllPosts = exports.getAllUsers = void 0;
 const User_1 = __importDefault(require("../models/User"));
 const Post_1 = __importDefault(require("../models/Post"));
 const stripe_1 = __importDefault(require("stripe"));
@@ -133,3 +133,13 @@ const getPaymentHistory = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.getPaymentHistory = getPaymentHistory;
+const getFlaggedPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const posts = yield Post_1.default.find({ isFlagged: true }).populate('author', 'name');
+        res.status(200).json(posts);
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Failed to fetch posts', error });
+    }
+});
+exports.getFlaggedPosts = getFlaggedPosts;

@@ -4,6 +4,7 @@ import { authenticate } from "../middlewares/authMiddleware";
 
 
 const BehavioralInsightsRouter = Router();
+console.log("BehavioralInsightsRouter loaded");
 
 BehavioralInsightsRouter.post('/behavior-insights', authenticate, getBehavioralInsights);
 BehavioralInsightsRouter.get('/behavior-insights/:userId', getBehavioralInsightsByUser);

@@ -23,22 +23,18 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PetCareRecommendations = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const PostSchema = new mongoose_1.Schema({
-    title: { type: String, required: true },
-    content: { type: String, required: true },
-    category: { type: String, enum: ['Tip', 'Story', 'Activity', 'Diseases'], required: true },
-    isPremium: { type: Boolean, default: false },
-    author: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true },
-    upvotes: { type: Number, default: 0 },
-    downvotes: { type: Number, default: 0 },
-    upvotedBy: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User' }],
-    downvotedBy: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User' }],
-    comments: [{ type: mongoose_1.default.Types.ObjectId, ref: 'Comment' }],
-    isPublished: { type: Boolean, default: false },
-    previewContent: { type: String, required: false },
-    isFlagged: { type: Boolean, default: false },
-    moderationReason: { type: String, default: null },
-    imageUrl: { type: String }
-}, { timestamps: true });
-exports.default = mongoose_1.default.model('Post', PostSchema);
+const PetCareRecommendationsSchema = new mongoose_1.Schema({
+    userId: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'User', required: true },
+    petType: { type: String, required: true },
+    petAge: { type: Number, required: true },
+    petHealthConcerns: { type: String },
+    petDietPreferences: { type: String },
+    activityLevel: { type: String },
+    weight: { type: Number },
+    location: { type: String },
+    careTips: { type: String },
+    customInputs: { type: mongoose_1.Schema.Types.Mixed }
+});
+exports.PetCareRecommendations = (0, mongoose_1.model)('PetCareRecommendations', PetCareRecommendationsSchema);

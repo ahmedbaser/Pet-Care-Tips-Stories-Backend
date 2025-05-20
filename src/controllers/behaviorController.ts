@@ -4,6 +4,7 @@ import config from "../config";
 import BehavioralInsight from "../models/BehavioralInsight";
 
 
+
 interface AuthenticateRequest extends Request {
    userId?: string;
 }
@@ -44,9 +45,12 @@ export const getBehavioralInsights = async (req: AuthenticateRequest, res: Respo
                 {role: 'system', content: 'You are a professional pet behaviorist and trainer'},
                 {role: 'user', content: prompt},
             ],
+            
+            
          });
          const insights = completion.choices[0]?.message?.content || 'No insights available';
-      
+         
+     
          const newInsight = new BehavioralInsight({
             userId,
             petType,
@@ -63,12 +67,15 @@ export const getBehavioralInsights = async (req: AuthenticateRequest, res: Respo
          message: 'Behavioral insight generated and saved',
          suggestion: newInsight.insights,
         });
+     
     
       } catch(error) {
         console.error('Behavioral insight error', error);
         return res.status(500).json({error: 'Behavioral insight generation failed'})
       }
 };
+
+
 
 
 

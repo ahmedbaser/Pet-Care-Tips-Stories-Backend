@@ -1,5 +1,3 @@
-// File: src/utils/moderateContent.ts
-
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import config from '../config';
 

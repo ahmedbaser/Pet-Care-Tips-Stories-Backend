@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const behaviorController_1 = require("../controllers/behaviorController");
+const authMiddleware_1 = require("../middlewares/authMiddleware");
+const BehavioralInsightsRouter = (0, express_1.Router)();
+console.log("BehavioralInsightsRouter loaded");
+BehavioralInsightsRouter.post('/behavior-insights', authMiddleware_1.authenticate, behaviorController_1.getBehavioralInsights);
+BehavioralInsightsRouter.get('/behavior-insights/:userId', behaviorController_1.getBehavioralInsightsByUser);
+exports.default = BehavioralInsightsRouter;

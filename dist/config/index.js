@@ -13,4 +13,5 @@ exports.default = {
     openai_api_key: process.env.OPENAI_SECRET_API_KEY,
     cohere_api_key: process.env.COHERE_API_KEY,
     generate_stroy_key: process.env.GENERATE_PET_KEY,
+    gemini_api_key: process.env.GEMINI_API_KEY
 };
