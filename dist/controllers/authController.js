@@ -18,7 +18,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const User_1 = __importDefault(require("../models/User"));
 // Generate JWT token
 const generateToken = (id, isAdmin, phone, address) => {
-    return jsonwebtoken_1.default.sign({ id: id.toString(), isAdmin }, process.env.JWT_SECRET, { expiresIn: '48h' });
+    return jsonwebtoken_1.default.sign({ id: id.toString(), isAdmin }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

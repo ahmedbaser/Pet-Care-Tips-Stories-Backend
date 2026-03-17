@@ -8,7 +8,7 @@ import crypto from 'crypto';
 
 // Generate JWT token
 const generateToken = (id: string | mongoose.Types.ObjectId, isAdmin: boolean, phone: string, address: string) => {
-    return jwt.sign({ id: id.toString(), isAdmin}, process.env.JWT_SECRET!, { expiresIn: '48h' });
+    return jwt.sign({ id: id.toString(), isAdmin}, process.env.JWT_SECRET!, { expiresIn: '30d' });
 };
 
 
