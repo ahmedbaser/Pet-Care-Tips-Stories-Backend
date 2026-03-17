@@ -1,4 +1,4 @@
-import { Request, response, Response } from 'express';
+import { Request, response, Response } from 'express'; 
 import OpenAI from 'openai';
 import config from '../config';
 
@@ -8,7 +8,6 @@ export const chatWithBot = async(req: Request, res: Response) => {
         if(!message) {
             return res.status(400).json({error: 'Message cannot be empty'})
         }
-
         const openai = new OpenAI({
             apiKey: config.openai_api_key as string,
         });
@@ -23,9 +22,16 @@ export const chatWithBot = async(req: Request, res: Response) => {
             ]
         });
         return res.json({response: completion.choices[0]?.message || 'No response'})
-    } catch (error) {
+    } catch (error: any) {
         console.log('Chatbot error', error);
+
+        // <-- Add this 429 quota check here
+        if (error?.status === 429) { 
+            return res.status(429).json({
+                error: 'OpenAI quota exceeded. Please try again later.'
+            });
+        }
+
         return res.status(500).json({error:'Failed to fetch response'})
     }
 }
-
